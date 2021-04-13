@@ -60,9 +60,34 @@
 			}
 		] ++(0,-4)
 		node [transition={info=b1}] {}
+		-- ++(0,-1) coordinate(split)
 
-		|- ++(-4,-1)  |- (0,0)
+		(split) ++(-2,0) coordinate(n11)
+		to [step={info=3.1}] ++(0,-4)
+		node[transition,info=b3.1]{}
+		to [step={info=4.1}] ++(0,-4)
+		node[transition,info=b3.2]{}
+		--++(0,-1)
+		coordinate(n12)
+
+		(split) ++(2,0) coordinate(n21)
+		to [step={info=3.2}] ++(0,-4)
+		node[transition,info=b3.2]{}
+		-- (n21 |- n12)
+		coordinate(n22)
+
+		(split) ++(6,0) coordinate(n31)
+		to [step={info=3.3}] ++(0,-4)
+		node[transition,info=b3.3]{}
+		-- (n31 |- n12)
+		coordinate(n32)
+
+
+		(n12) ++(2,0)
+		|- ++(-8,-2)  |- (0,0)
 	;
+	\draw[thick,double] (n11) ++(-0.5,0) -- (n31) --++(0.5,0) ;
+	\draw[thick,double] (n12) ++(-0.5,0) -- (n32) --++(0.5,0) ;
 \end{tikzpicture}
 
 \begin{tikzpicture}[circuit plc grafcet,thick,y=1.5cm]
