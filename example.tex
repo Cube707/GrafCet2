@@ -1,0 +1,87 @@
+\documentclass[multi=tikzpicture,margin=0.25cm]{standalone}
+
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{tikz}
+\usepackage{myGrafcet}
+
+\usetikzlibrary{circuits.plc.sfc}
+
+
+\begin{document}
+
+
+\begin{tikzpicture}[
+		thick,
+		x=2.6\tikzcircuitssizeunit,
+		y=1.3\tikzcircuitssizeunit,
+		circuit plc grafcet,
+	]
+	\draw (0,0)
+		to [flow direction] ++(0,-2)
+
+		to [initstep={info=0,action={info=display}}] ++(0,-3)
+		node [transition,info=b1 and not b0] (a) {}
+		-- ++(0,-2)
+
+		to [step={info={[red]1},info'={[blue]comment},
+				action={
+					info={[blue]hello},
+					falling
+				},
+				action={
+					info=G1\{init\},
+					force
+				},
+				action={
+					info=Ein sehr langer Text,
+					condition=A \& B,
+					falling
+				},
+				newrow,
+				action={
+					info={Test\_Text{=}1},
+					condition={A{=}1 | Ä\_on}
+				}
+			}
+		] ++(0,-4)
+
+		-- ++(0,-4)
+		to [macrostep={info=M0,info'={$\bullet$}}] ++(0,-4)
+		node [transition,info=b0] {}
+
+		to [enclosingstep={info=S0}] ++(0,-4)
+		node [transition,info=b0] {}
+
+		to [step={info=2,
+				action={info=bye,rising},
+				action={info=bye,falling}
+			}
+		] ++(0,-4)
+		node [transition={info=b1}] {}
+
+		|- ++(-4,-1)  |- (0,0)
+	;
+\end{tikzpicture}
+
+\begin{tikzpicture}[circuit plc grafcet,thick,y=1.5cm]
+	\draw (0,0)
+		to[initstep={info=0}] ++(0,-1)
+		node[transition,info=start]{}
+		|- ++(-1,-0.25)
+		to[flow direction] (-1,0) -- (0,0)
+	;
+\end{tikzpicture}
+
+\begin{tikzpicture}[circuit plc sfc,thick,y=1.5cm]
+	\draw (0,0)
+		to[sfcstepi={info=0,sfcaction={info'={[blue]test}}}] ++(0,-1)
+		node[sfctransition,info=start]{}
+		|- ++(-1,-0.25)
+		to[flow direction] (-1,0) -- (0,0)
+	;
+\end{tikzpicture}
+
+
+\end{document}

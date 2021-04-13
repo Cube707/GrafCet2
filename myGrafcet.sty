@@ -1,0 +1,244 @@
+% !TeX root = ./example.tex
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{myGrafcet}[2021/03/15 custom grafcet package]
+
+\RequirePackage{tikz}
+
+\usetikzlibrary{arrows.meta,circuits}
+\usepgflibrary{shapes.gates.ee}
+
+
+\newcount\grafcet@act@pos
+\newcount\grafcet@actrow@pos
+\def\tikz@lib@grafcet@lct@plain[#1]#2\pgf@stop{\tikzset{label={[label position=center,every info/.try,#1]#2}}}
+\def\tikz@lib@grafcet@lrg@plain[#1]#2\pgf@stop{\tikzset{label={[label position=right,every info/.try,#1]#2}}}
+\def\tikz@lib@grafcet@llf@plain[#1]#2\pgf@stop{\tikzset{label={[label position=left,every info'/.try,#1]#2}}}
+\def\tikz@lib@grafcet@action@lct@plain[#1]#2\pgf@stop{\tikzset{grafcet@actnameopt/.style={#1},grafcet@actname=#2}}
+
+\newif\if@ActionOnRising
+\newif\if@ActionOnFalling
+\newif\if@ActionForce
+
+\pgfdeclareshape{initstep}{
+	\inheritsavedanchors[from=rectangle]
+	\inheritanchorborder[from=rectangle]
+	\inheritanchor[from=rectangle]{north}
+	\inheritanchor[from=rectangle]{north west}
+	\inheritanchor[from=rectangle]{north east}
+	\inheritanchor[from=rectangle]{center}
+	\inheritanchor[from=rectangle]{west}
+	\inheritanchor[from=rectangle]{east}
+	\inheritanchor[from=rectangle]{mid}
+	\inheritanchor[from=rectangle]{base}
+	\inheritanchor[from=rectangle]{base west}
+	\inheritanchor[from=rectangle]{base east}
+	\inheritanchor[from=rectangle]{south}
+	\inheritanchor[from=rectangle]{south west}
+	\inheritanchor[from=rectangle]{south east}
+	\inheritbackgroundpath[from=rectangle]
+	\behindbackgroundpath{
+		\pgfpathrectanglecorners
+			{\pgfpointadd{\southwest}{\pgfpoint{4*\pgfkeysvalueof{/pgf/inner xsep}}{4*\pgfkeysvalueof{/pgf/inner ysep}}}}
+			{\pgfpointadd{\northeast}{\pgfpointscale{-1}{\pgfpoint{4*\pgfkeysvalueof{/pgf/inner xsep}}{4*\pgfkeysvalueof{/pgf/inner ysep}}}}}
+	}
+}
+\pgfdeclareshape{macrostep}{
+	\inheritsavedanchors[from=rectangle]
+	\inheritanchorborder[from=rectangle]
+	\inheritanchor[from=rectangle]{north}
+	\inheritanchor[from=rectangle]{north west}
+	\inheritanchor[from=rectangle]{north east}
+	\inheritanchor[from=rectangle]{center}
+	\inheritanchor[from=rectangle]{west}
+	\inheritanchor[from=rectangle]{east}
+	\inheritanchor[from=rectangle]{mid}
+	\inheritanchor[from=rectangle]{mid west}
+	\inheritanchor[from=rectangle]{mid east}
+	\inheritanchor[from=rectangle]{base}
+	\inheritanchor[from=rectangle]{base west}
+	\inheritanchor[from=rectangle]{base east}
+	\inheritanchor[from=rectangle]{south}
+	\inheritanchor[from=rectangle]{south west}
+	\inheritanchor[from=rectangle]{south east}
+	\inheritbackgroundpath[from=rectangle]
+	\behindbackgroundpath{
+		\pgfpathrectanglecorners
+			{\pgfpointadd{\southwest}{\pgfpoint{0.8*\pgfkeysvalueof{/pgf/inner xsep}}{4*\pgfkeysvalueof{/pgf/inner ysep}}}}
+			{\pgfpointadd{\northeast}{\pgfpointscale{-1}{\pgfpoint{0.8*\pgfkeysvalueof{/pgf/inner xsep}}{4*\pgfkeysvalueof{/pgf/inner ysep}}}}}
+	}
+}
+\pgfdeclareshape{enclosingstep}{
+	\inheritsavedanchors[from=rectangle]
+	\inheritanchorborder[from=rectangle]
+	\inheritanchor[from=rectangle]{north}
+	\inheritanchor[from=rectangle]{north west}
+	\inheritanchor[from=rectangle]{north east}
+	\inheritanchor[from=rectangle]{center}
+	\inheritanchor[from=rectangle]{west}
+	\inheritanchor[from=rectangle]{east}
+	\inheritanchor[from=rectangle]{mid}
+	\inheritanchor[from=rectangle]{mid west}
+	\inheritanchor[from=rectangle]{mid east}
+	\inheritanchor[from=rectangle]{base}
+	\inheritanchor[from=rectangle]{base west}
+	\inheritanchor[from=rectangle]{base east}
+	\inheritanchor[from=rectangle]{south}
+	\inheritanchor[from=rectangle]{south west}
+	\inheritanchor[from=rectangle]{south east}
+	\inheritbackgroundpath[from=rectangle]
+	\behindbackgroundpath{
+		\northeast \pgf@xa=-.5\pgf@x \pgf@ya=.95\pgf@y
+		\southwest \pgf@xb=.95\pgf@x \pgf@yb=-.5\pgf@y
+        \pgfpathmoveto{\pgfpoint{\pgf@xa}{\pgf@ya}}
+        \pgfpathlineto{\pgfpoint{\pgf@xb}{\pgf@yb}}
+		\northeast \pgf@xa=.5\pgf@x \pgf@ya=.95\pgf@y
+		\northeast \pgf@xb=.95\pgf@x \pgf@yb=.5\pgf@y
+		\pgfpathmoveto{\pgfpoint{\pgf@xa}{\pgf@ya}}
+		\pgfpathlineto{\pgfpoint{\pgf@xb}{\pgf@yb}}
+		\northeast \pgf@xa=.95\pgf@x \pgf@ya=-.5\pgf@y
+		\southwest \pgf@xb=-.5\pgf@x \pgf@yb=.95\pgf@y
+		\pgfpathmoveto{\pgfpoint{\pgf@xa}{\pgf@ya}}
+		\pgfpathlineto{\pgfpoint{\pgf@xb}{\pgf@yb}}
+		\southwest \pgf@xa=.5\pgf@x \pgf@ya=.95\pgf@y
+		\southwest \pgf@xb=.95\pgf@x \pgf@yb=.5\pgf@y
+		\pgfpathmoveto{\pgfpoint{\pgf@xa}{\pgf@ya}}
+		\pgfpathlineto{\pgfpoint{\pgf@xb}{\pgf@yb}}
+        \pgfpathclose
+    }
+}
+
+%% Really dirt trick to customize info and info' keys in an action.
+\def\sfc@copycode#1#2{
+  \pgfkeyssetvalue{/tikz/#1/.@cmd}{\expandafter\pgfkeysvalueof{/tikz/#2/.@cmd}}%
+  \pgfkeyssetvalue{/tikz/#1/.@body}{\expandafter\pgfkeysvalueof{/tikz/#2/.@body}}%
+}
+
+
+\tikzset{
+	circuit plc grafcet/.style={
+		circuit,
+		grafcet@actinfo/.code={\pgfutil@ifnextchar[\tikz@lib@grafcet@action@lct@plain{\tikz@lib@grafcet@action@lct@plain[]}##1\pgf@stop},
+		grafcet@actinfo'/.code={\pgfutil@ifnextchar[\tikz@lib@grafcet@action@lrg@plain{\tikz@lib@grafcet@action@lrg@plain[]}##1\pgf@stop},
+		grafcet@actname/.initial=, % action name
+		grafcet@actnameopt/.style=, % action name options
+%
+		cetaw/.initial=5\tikzcircuitssizeunit, % action width
+		cetah/.initial=2.6\tikzcircuitssizeunit, % action height
+		action distance/.initial=3\tikzcircuitssizeunit, % distance between step and distance
+%
+		condition/.initial=, % condition can be passed in here
+		rising/.is if=@ActionOnRising, % switch for rising flank on action
+		falling/.is if=@ActionOnFalling, % switch for falling flank on action
+		force/.is if=@ActionForce, % switch for falling flank on action
+%
+		circuit declare symbol=transition,
+		set transition graphic={draw,fill,shape=rectangle,circuit symbol size=width 1 height 0,
+			info/.code={\pgfutil@ifnextchar[\tikz@lib@grafcet@lrg@plain{\tikz@lib@grafcet@lrg@plain[]}####1\pgf@stop},
+			info'/.code={\pgfutil@ifnextchar[\tikz@lib@grafcet@llf@plain{\tikz@lib@grafcet@llf@plain[]}####1\pgf@stop}
+		},
+		circuit declare symbol=step,
+		set step graphic={draw,shape=rectangle,minimum size=2.6\tikzcircuitssizeunit,
+			/utils/exec={\global\grafcet@act@pos=0},
+			/utils/exec={\global\grafcet@actrow@pos=0},
+			info/.code={\pgfutil@ifnextchar[\tikz@lib@grafcet@lct@plain{\tikz@lib@grafcet@lct@plain[]}####1\pgf@stop},
+			info'/.code={\pgfutil@ifnextchar[\tikz@lib@grafcet@llf@plain{\tikz@lib@grafcet@llf@plain[]}####1\pgf@stop}
+		},
+		circuit declare symbol=initstep,
+		set initstep graphic={draw,shape=initstep,minimum size=2.6\tikzcircuitssizeunit,
+			/utils/exec={\global\grafcet@act@pos=0},
+			info/.code={\pgfutil@ifnextchar[\tikz@lib@grafcet@lct@plain{\tikz@lib@grafcet@lct@plain[]}####1\pgf@stop},
+			info'/.code={\pgfutil@ifnextchar[\tikz@lib@grafcet@llf@plain{\tikz@lib@grafcet@llf@plain[]}####1\pgf@stop}
+		},
+		circuit declare symbol=macrostep,
+		set macrostep graphic={draw,shape=macrostep,minimum size=2.6\tikzcircuitssizeunit,
+			/utils/exec={\global\grafcet@act@pos=0},
+			info/.code={\pgfutil@ifnextchar[\tikz@lib@grafcet@lct@plain{\tikz@lib@grafcet@lct@plain[]}####1\pgf@stop},
+			info'/.code={\pgfutil@ifnextchar[\tikz@lib@grafcet@llf@plain{\tikz@lib@grafcet@llf@plain[]}####1\pgf@stop}
+		},
+		circuit declare symbol=enclosingstep,
+		set enclosingstep graphic={draw,shape=enclosingstep,minimum size=2.6\tikzcircuitssizeunit,
+			/utils/exec={\global\grafcet@act@pos=0},
+			info/.code={\pgfutil@ifnextchar[\tikz@lib@grafcet@lct@plain{\tikz@lib@grafcet@lct@plain[]}####1\pgf@stop},
+			info'/.code={\pgfutil@ifnextchar[\tikz@lib@grafcet@llf@plain{\tikz@lib@grafcet@llf@plain[]}####1\pgf@stop}
+		},
+%
+		action/.style={
+			append after command={
+				\bgroup
+				[current point is local=true]
+				[every circuit annotation/.try]
+				[annotation arrow,-]
+				[label distance=\pgfkeysvalueof{/tikz/action distance}]
+				[/utils/exec={\sfc@copycode{info}{grafcet@actinfo}}]
+				[/utils/exec={\pgftransformresetnontranslations}]
+				edge[every action/.try, ##1, to path={
+					\ifnum\grafcet@act@pos=0%
+						(\tikzlastnode.east) -- ++(\tikz@label@distance,0)
+					\else%
+						(GrafcetActionTemp.east) ++(-\pgflinewidth,0)
+					\fi%
+					\pgfextra{\edef\pgf@testc{\pgfkeysvalueof{/tikz/condition}} }
+					node[/utils/exec={\global\advance\grafcet@act@pos by1\relax},
+						draw, rectangle, right, minimum height=\pgfkeysvalueof{/tikz/cetah}, minimum width=\pgfkeysvalueof{/tikz/cetaw}](GrafcetActionTemp){\pgfkeysvalueof{/tikz/grafcet@actname}}
+					\if@ActionForce
+						($ (GrafcetActionTemp.north west) + (0.5*\pgfkeysvalueof{/pgf/inner ysep},-0.5*\pgfkeysvalueof{/pgf/inner xsep}) $) -|
+						($ (GrafcetActionTemp.south east) + (-0.5*\pgfkeysvalueof{/pgf/inner ysep},0.5*\pgfkeysvalueof{/pgf/inner xsep}) $) -|
+						($ (GrafcetActionTemp.north west) + (0.5*\pgfkeysvalueof{/pgf/inner ysep},-0.5*\pgfkeysvalueof{/pgf/inner xsep}) $) --
+						++(0.1,0)
+					\fi
+					\ifx\pgf@testc\@empty
+						\if@ActionOnRising
+							[->] (GrafcetActionTemp.north west) ++(0.5\pgflinewidth,0) -- ++(0,0.8em)
+						\else
+						\if@ActionOnFalling
+							[->] (GrafcetActionTemp.south west) ++(0.5\pgflinewidth,0) -- ++(0,-0.8em)
+						\fi\fi
+					\else
+						(GrafcetActionTemp.north west) ++(0.5em,0) node[above right]{\small\pgfkeysvalueof{/tikz/condition}} -- ++(0,0.8em)
+					\fi
+				}] ()
+				\tikz@after@path%
+				\egroup%
+			}
+		},
+%
+		distance/.initial=2.5*\pgfkeysvalueof{/tikz/cetah},
+		newrow/.style={
+			append after command={
+				\bgroup
+				[current point is local=true]
+				[every circuit annotation/.try]
+				[annotation arrow,-]
+				[label distance=\pgfkeysvalueof{/tikz/action distance}]
+				[/utils/exec={\global\advance\grafcet@actrow@pos by1\relax}]
+				edge[every action/.try, ##1, to path={
+					(\tikzlastnode.east) ++(0,0.5*\tikz@label@distance) -| ++(\the\grafcet@actrow@pos*\pgfkeysvalueof{/tikz/distance},0.5*\tikz@label@distance) coordinate(GrafcetActionTemp)
+				}] ()
+				\tikz@after@path%
+				\egroup%
+			}
+		},
+		circuit declare symbol=flow direction,
+		circuit declare symbol=flow direction',
+		set flow direction graphic  = flow direction grafcet graphic,
+		set flow direction' graphic = flow direction' grafcet graphic,
+		flow direction grafcet graphic/.style = {
+		  shape=direction ee,
+		  circuit symbol filled,
+		  flow direction arrow,
+		  minimum width  = .5*\the\tikzcircuitssizeunit+.3*\the\pgflinewidth,
+		  minimum height = .5*\the\tikzcircuitssizeunit+.3*\the\pgflinewidth,
+		  transform shape
+		},
+		flow direction' grafcet graphic/.style = {
+		  flow direction grafcet graphic,
+		  rotate=180
+		},
+		flow direction arrow/.style = {
+		  /utils/exec={\pgfsetarrowoptions{direction ee}{1.3065*.5*\the\tikzcircuitssizeunit+1.3065*.3*\the\pgflinewidth}},
+		  >=direction ee,
+		  direction ee arrow = direction ee,
+		},
+		every circuit plc grafcet/.try
+	}
+}
