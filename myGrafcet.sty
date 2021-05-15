@@ -1,4 +1,3 @@
-% !TeX root = ./example.tex
 \NeedsTeXFormat{LaTeX2e}
 \ProvidesPackage{myGrafcet}[2021/03/15 custom grafcet package]
 
@@ -62,9 +61,14 @@
 	\inheritanchor[from=rectangle]{south east}
 	\inheritbackgroundpath[from=rectangle]
 	\behindbackgroundpath{
-		\pgfpathrectanglecorners
-			{\pgfpointadd{\southwest}{\pgfpoint{0.8*\pgfkeysvalueof{/pgf/inner xsep}}{4*\pgfkeysvalueof{/pgf/inner ysep}}}}
-			{\pgfpointadd{\northeast}{\pgfpointscale{-1}{\pgfpoint{0.8*\pgfkeysvalueof{/pgf/inner xsep}}{4*\pgfkeysvalueof{/pgf/inner ysep}}}}}
+		\northeast \pgf@xa=\pgf@x \pgf@ya=.8\pgf@y
+		\southwest \pgf@xb=\pgf@x \pgf@yb=-.8\pgf@y
+        \pgfpathmoveto{\pgfpoint{\pgf@xa}{\pgf@ya}}
+        \pgfpathlineto{\pgfpoint{\pgf@xb}{\pgf@yb}}
+		\northeast \pgf@xa=\pgf@x \pgf@ya=-.8\pgf@y
+		\southwest \pgf@xb=\pgf@x \pgf@yb=.8\pgf@y
+        \pgfpathmoveto{\pgfpoint{\pgf@xa}{\pgf@ya}}
+        \pgfpathlineto{\pgfpoint{\pgf@xb}{\pgf@yb}}
 	}
 }
 \pgfdeclareshape{enclosingstep}{
@@ -87,20 +91,20 @@
 	\inheritanchor[from=rectangle]{south east}
 	\inheritbackgroundpath[from=rectangle]
 	\behindbackgroundpath{
-		\northeast \pgf@xa=-.5\pgf@x \pgf@ya=.95\pgf@y
-		\southwest \pgf@xb=.95\pgf@x \pgf@yb=-.5\pgf@y
+		\northeast \pgf@xa=-.5\pgf@x \pgf@ya=.97\pgf@y
+		\southwest \pgf@xb=.97\pgf@x \pgf@yb=-.5\pgf@y
         \pgfpathmoveto{\pgfpoint{\pgf@xa}{\pgf@ya}}
         \pgfpathlineto{\pgfpoint{\pgf@xb}{\pgf@yb}}
-		\northeast \pgf@xa=.5\pgf@x \pgf@ya=.95\pgf@y
-		\northeast \pgf@xb=.95\pgf@x \pgf@yb=.5\pgf@y
+		\northeast \pgf@xa=.5\pgf@x \pgf@ya=.97\pgf@y
+		\northeast \pgf@xb=.97\pgf@x \pgf@yb=.5\pgf@y
 		\pgfpathmoveto{\pgfpoint{\pgf@xa}{\pgf@ya}}
 		\pgfpathlineto{\pgfpoint{\pgf@xb}{\pgf@yb}}
-		\northeast \pgf@xa=.95\pgf@x \pgf@ya=-.5\pgf@y
-		\southwest \pgf@xb=-.5\pgf@x \pgf@yb=.95\pgf@y
+		\northeast \pgf@xa=.97\pgf@x \pgf@ya=-.5\pgf@y
+		\southwest \pgf@xb=-.5\pgf@x \pgf@yb=.97\pgf@y
 		\pgfpathmoveto{\pgfpoint{\pgf@xa}{\pgf@ya}}
 		\pgfpathlineto{\pgfpoint{\pgf@xb}{\pgf@yb}}
-		\southwest \pgf@xa=.5\pgf@x \pgf@ya=.95\pgf@y
-		\southwest \pgf@xb=.95\pgf@x \pgf@yb=.5\pgf@y
+		\southwest \pgf@xa=.5\pgf@x \pgf@ya=.97\pgf@y
+		\southwest \pgf@xb=.97\pgf@x \pgf@yb=.5\pgf@y
 		\pgfpathmoveto{\pgfpoint{\pgf@xa}{\pgf@ya}}
 		\pgfpathlineto{\pgfpoint{\pgf@xb}{\pgf@yb}}
         \pgfpathclose
@@ -115,6 +119,7 @@
 
 
 \tikzset{
+	circuit plc grafcet/.code={\renewcommand{\not}[1]{$\overline{\hbox{##1}}\m@th$}},
 	circuit plc grafcet/.style={
 		circuit,
 		grafcet@actinfo/.code={\pgfutil@ifnextchar[\tikz@lib@grafcet@action@lct@plain{\tikz@lib@grafcet@action@lct@plain[]}##1\pgf@stop},
@@ -137,26 +142,26 @@
 			info'/.code={\pgfutil@ifnextchar[\tikz@lib@grafcet@llf@plain{\tikz@lib@grafcet@llf@plain[]}####1\pgf@stop}
 		},
 		circuit declare symbol=step,
-		set step graphic={draw,shape=rectangle,minimum size=2.6\tikzcircuitssizeunit,
+		set step graphic={draw,shape=rectangle,minimum size=2.8\tikzcircuitssizeunit,
 			/utils/exec={\global\grafcet@act@pos=0},
 			/utils/exec={\global\grafcet@actrow@pos=0},
 			info/.code={\pgfutil@ifnextchar[\tikz@lib@grafcet@lct@plain{\tikz@lib@grafcet@lct@plain[]}####1\pgf@stop},
 			info'/.code={\pgfutil@ifnextchar[\tikz@lib@grafcet@llf@plain{\tikz@lib@grafcet@llf@plain[]}####1\pgf@stop}
 		},
 		circuit declare symbol=initstep,
-		set initstep graphic={draw,shape=initstep,minimum size=2.6\tikzcircuitssizeunit,
+		set initstep graphic={draw,shape=initstep,minimum size=2.8\tikzcircuitssizeunit,
 			/utils/exec={\global\grafcet@act@pos=0},
 			info/.code={\pgfutil@ifnextchar[\tikz@lib@grafcet@lct@plain{\tikz@lib@grafcet@lct@plain[]}####1\pgf@stop},
 			info'/.code={\pgfutil@ifnextchar[\tikz@lib@grafcet@llf@plain{\tikz@lib@grafcet@llf@plain[]}####1\pgf@stop}
 		},
 		circuit declare symbol=macrostep,
-		set macrostep graphic={draw,shape=macrostep,minimum size=2.6\tikzcircuitssizeunit,
+		set macrostep graphic={draw,shape=macrostep,minimum size=2.8\tikzcircuitssizeunit,
 			/utils/exec={\global\grafcet@act@pos=0},
 			info/.code={\pgfutil@ifnextchar[\tikz@lib@grafcet@lct@plain{\tikz@lib@grafcet@lct@plain[]}####1\pgf@stop},
 			info'/.code={\pgfutil@ifnextchar[\tikz@lib@grafcet@llf@plain{\tikz@lib@grafcet@llf@plain[]}####1\pgf@stop}
 		},
 		circuit declare symbol=enclosingstep,
-		set enclosingstep graphic={draw,shape=enclosingstep,minimum size=2.6\tikzcircuitssizeunit,
+		set enclosingstep graphic={draw,shape=enclosingstep,minimum size=2.8\tikzcircuitssizeunit,
 			/utils/exec={\global\grafcet@act@pos=0},
 			info/.code={\pgfutil@ifnextchar[\tikz@lib@grafcet@lct@plain{\tikz@lib@grafcet@lct@plain[]}####1\pgf@stop},
 			info'/.code={\pgfutil@ifnextchar[\tikz@lib@grafcet@llf@plain{\tikz@lib@grafcet@llf@plain[]}####1\pgf@stop}
