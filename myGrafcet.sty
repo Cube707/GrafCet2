@@ -91,20 +91,28 @@
 	\inheritanchor[from=rectangle]{south east}
 	\inheritbackgroundpath[from=rectangle]
 	\behindbackgroundpath{
-		\northeast \pgf@xa=-.5\pgf@x \pgf@ya=.97\pgf@y
-		\southwest \pgf@xb=.97\pgf@x \pgf@yb=-.5\pgf@y
+		\northeast \pgf@xa=-.5\pgf@x \pgf@ya=\pgf@y
+		\advance\pgf@ya by -.5\pgflinewidth
+		\southwest \pgf@xb=\pgf@x \pgf@yb=-.5\pgf@y
+		\advance\pgf@xb by .5\pgflinewidth
         \pgfpathmoveto{\pgfpoint{\pgf@xa}{\pgf@ya}}
         \pgfpathlineto{\pgfpoint{\pgf@xb}{\pgf@yb}}
-		\northeast \pgf@xa=.5\pgf@x \pgf@ya=.97\pgf@y
-		\northeast \pgf@xb=.97\pgf@x \pgf@yb=.5\pgf@y
+		\northeast \pgf@xa=.5\pgf@x \pgf@ya=\pgf@y
+		\advance\pgf@ya by -.5\pgflinewidth
+		\northeast \pgf@xb=\pgf@x \pgf@yb=.5\pgf@y
+		\advance\pgf@xb by -.5\pgflinewidth
 		\pgfpathmoveto{\pgfpoint{\pgf@xa}{\pgf@ya}}
 		\pgfpathlineto{\pgfpoint{\pgf@xb}{\pgf@yb}}
-		\northeast \pgf@xa=.97\pgf@x \pgf@ya=-.5\pgf@y
-		\southwest \pgf@xb=-.5\pgf@x \pgf@yb=.97\pgf@y
+		\northeast \pgf@xa=\pgf@x \pgf@ya=-.5\pgf@y
+		\advance\pgf@xa by -.5\pgflinewidth
+		\southwest \pgf@xb=-.5\pgf@x \pgf@yb=\pgf@y
+		\advance\pgf@yb by .5\pgflinewidth
 		\pgfpathmoveto{\pgfpoint{\pgf@xa}{\pgf@ya}}
 		\pgfpathlineto{\pgfpoint{\pgf@xb}{\pgf@yb}}
-		\southwest \pgf@xa=.5\pgf@x \pgf@ya=.97\pgf@y
-		\southwest \pgf@xb=.97\pgf@x \pgf@yb=.5\pgf@y
+		\southwest \pgf@xa=.5\pgf@x \pgf@ya=\pgf@y
+		\advance\pgf@ya by .5\pgflinewidth
+		\southwest \pgf@xb=\pgf@x \pgf@yb=.5\pgf@y
+		\advance\pgf@xb by .5\pgflinewidth
 		\pgfpathmoveto{\pgfpoint{\pgf@xa}{\pgf@ya}}
 		\pgfpathlineto{\pgfpoint{\pgf@xb}{\pgf@yb}}
         \pgfpathclose
