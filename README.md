@@ -31,7 +31,7 @@ This Example is produced by [`example.tex`](./example.tex):
 
 # Plans
 
--[ ] allowing for use of `\not{}` in transitions and conditions
--[ ] polishing the tikz-key backend, so that less nesting is needed (no idea how though)
--[ ] adding an easy way to create parallel junctions
--[ ] adding documentation
+- [ ] allowing for use of `\not{}` in transitions and conditions
+- [ ] polishing the tikz-key backend, so that less nesting is needed (no idea how though)
+- [ ] adding an easy way to create parallel junctions
+- [ ] adding documentation
