@@ -9,8 +9,29 @@ additional shapes needed to create complete GRAFCETs. This means that most of it
 The package is a work in progress. It does work in its current state, but I plan on changing some behaviour as well as adding some more features, if I
 can find the time.
 
-# Plans:
-- allowing for use of `\not{}` in transitions and conditions
-- polishing the tikz-key backend, so that less nesting is needed (no idea how though)
-- adding an easy way to create parallel junctions
-- adding documentation
+## Usage
+
+To use the package, just download the `grafcet2.sty` file and place it next to your project (or in a folder that's on `TEXINPUTS`).
+
+Then you can load the package as you would expect:
+
+```LaTeX
+\usepackage{grafcet2}
+```
+
+The commands work very similar to the `tikz-sfc` package, so most of its documentation applies. But it's probably easiest if you just look at the example.
+
+
+### Example
+
+This Example is produced by [`example.tex`](./example.tex):
+
+![example grafcet](./example.png)
+
+
+# Plans
+
+-[ ] allowing for use of `\not{}` in transitions and conditions
+-[ ] polishing the tikz-key backend, so that less nesting is needed (no idea how though)
+-[ ] adding an easy way to create parallel junctions
+-[ ] adding documentation
