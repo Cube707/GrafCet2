@@ -6,6 +6,8 @@
 \usetikzlibrary{arrows.meta,circuits}
 \usepgflibrary{shapes.gates.ee}
 
+\newcommand{\grafcet@overbar}[1]{$\mkern 1.5mu\overline{\mkern-1.5mu\hbox{#1}\mkern-1.5mu}\mkern 1.5mu\m@th$}
+\providecommand{\overbar}[1]{\grafcet@overbar{#1}}
 
 \newcount\grafcet@act@pos
 \newcount\grafcet@actrow@pos
@@ -129,6 +131,7 @@
 \tikzset{
 	circuit plc grafcet/.code={\renewcommand{\not}[1]{$\overline{\hbox{##1}}\m@th$}},
 	circuit plc grafcet/.style={
+        /utils/exec={\let\not\grafcet@overbar},
 		circuit,
 		grafcet@actinfo/.code={\pgfutil@ifnextchar[\tikz@lib@grafcet@action@lct@plain{\tikz@lib@grafcet@action@lct@plain[]}##1\pgf@stop},
 		grafcet@actinfo'/.code={\pgfutil@ifnextchar[\tikz@lib@grafcet@action@lrg@plain{\tikz@lib@grafcet@action@lrg@plain[]}##1\pgf@stop},

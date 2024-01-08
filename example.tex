@@ -6,6 +6,7 @@
 
 \usepackage{grafcet2}
 
+
 \usetikzlibrary{circuits.plc.sfc}
 
 
@@ -35,7 +36,7 @@
 				},
 				action={
 					info=Ein sehr langer Text,
-					condition=A \& B,
+					condition=A \& \not{Button},
 					falling
 				},
 				newrow,
