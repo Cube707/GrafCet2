@@ -1,18 +1,16 @@
 \documentclass[multi=tikzpicture,margin=0.25cm]{standalone}
 
-
+% use this to get special charaters (german "Umlaute") working
 \usepackage[utf8]{inputenc}
 \usepackage[T1]{fontenc}
 
+% import the package
+% remember that it is not deliverd with LaTeX installations currently
+% you need to download it manually!
 \usepackage{grafcet2}
 
 
-\usetikzlibrary{circuits.plc.sfc}
-
-
 \begin{document}
-
-
 \begin{tikzpicture}[
 		x=2.6\tikzcircuitssizeunit,
 		y=1.3\tikzcircuitssizeunit,
@@ -88,32 +86,11 @@
 		|- ++(-8,-2)  |- (0,0)
 
 		(n12) ++(2,-2)
-		to [flow direction={info=to G2,pos=1}] ++(0,-2)
-		%node[below]{to G2}
-
+		to [flow direction={info=to G2,pos=1}] ++(0,-2) % pos=1 puts the arrow-head at the end of the line
+		%node[below]{to G2} % use this alternativly if you prefer the text under the arrow
 	;
+	% this creaters the double-lines for the parallel junctions:
 	\draw[thick,double] (n11) ++(-0.5,0) -- (n31) --++(0.5,0) ;
 	\draw[thick,double] (n12) ++(-0.5,0) -- (n32) --++(0.5,0) ;
-
 \end{tikzpicture}
-
-\begin{tikzpicture}[circuit plc grafcet,thick,y=1.5cm]
-	\draw (0,0)
-		to[initstep={info=0}] ++(0,-1)
-		node[transition,info=start]{}
-		|- ++(-1,-0.25)
-		to[flow direction] (-1,0) -- (0,0)
-	;
-\end{tikzpicture}
-
-\begin{tikzpicture}[circuit plc sfc,thick,y=1.5cm]
-	\draw (0,0)
-		to[sfcstepi={info=0,sfcaction={info'={[blue]test}}}] ++(0,-1)
-		node[sfctransition,info=start]{}
-		|- ++(-1,-0.25)
-		to[flow direction] (-1,0) -- (0,0)
-	;
-\end{tikzpicture}
-
-
 \end{document}
